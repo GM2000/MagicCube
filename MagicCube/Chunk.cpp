@@ -129,7 +129,7 @@ void setBlockID(float x,float y,float z,int BlockID)
 					Particle[0].TextureZ2=32;
 					Particle[0].isLive=true;
 				*/
-				autoAddParticle(x,y,z,0,NowBlockID);
+				autoAddParticle(x,y,z,0,NowBlockID,player.ChooseBlockFrount);
 				////////////////////////////END
 				Chunk[ChunkID].BlockID[(int)(x-Chunk[ChunkID].chunkX*16)][(int)y][(int)(z-Chunk[ChunkID].chunkZ*16)]=BlockID;
 				if (MC_Block[Chunk[ChunkID].BlockID[(int)(x-Chunk[ChunkID].chunkX*16)][(int)y+1][(int)(z-Chunk[ChunkID].chunkZ*16)]].isPlant)

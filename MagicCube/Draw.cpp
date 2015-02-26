@@ -8,6 +8,7 @@
 #include "OpenglWindows.h"
 #include "Setting.h"
 #include "Particle.h"
+#include "Mob.h"
 
 int FPSTime=0;
 float currentTime = GetTickCount()*0.001f;
@@ -158,6 +159,7 @@ void DrawMap()
 		}
 	}
 	Particles();
+	reSetMob();
 }
 int DrawGLScene(GLvoid)								// 从这里开始进行所有的绘制
 {

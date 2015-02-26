@@ -129,6 +129,18 @@ int AddParticle(float x,float y,float z,int type,int TextureID,bool hasColor)
 	}else{
 		Particle[ParticleAddNumber].zMove=-rand()%10/100.0;
 	}
+	if (rand()%100>50)
+	{
+		isBigThan0=true;
+	}else{
+		isBigThan0=false;
+	}
+	if (isBigThan0)
+	{
+		Particle[ParticleAddNumber].yMove=rand()%10/100.0;
+	}else{
+		Particle[ParticleAddNumber].yMove=-rand()%10/100.0;
+	}
 
 	Particle[ParticleAddNumber].health=50;
 	Particle[ParticleAddNumber].isLive=true;
@@ -140,21 +152,44 @@ int AddParticle(float x,float y,float z,int type,int TextureID,bool hasColor)
 	return TRUE;
 }
 
-int autoAddParticle(int x,int y,int z,int type,int BlockID)
+int autoAddParticle(int x,int y,int z,int type,int BlockID,int frountID)
 {
 	bool hasColor;
-	if ((MC_Block[BlockID].isGrass) | (MC_Block[BlockID].isLeaf))
+	if (((MC_Block[BlockID].isGrass) & (frountID==0)) | (MC_Block[BlockID].isLeaf))
 	{
 		hasColor=true;
 	}else{
 		hasColor=false;
 	}
-	if (type==0)
+	if (type==1)
 	{
-		AddParticle(x+0.4,y+0.5,z+0.4,type,MC_Block[BlockID].Texture[0],hasColor);
-	}else if (type==1)
+		if (frountID==0)
+		{
+			AddParticle(x+0.4,y+1.2,z+0.4,type,MC_Block[BlockID].Texture[frountID],hasColor);
+		}else
+		if (frountID==1)
+		{
+			AddParticle(x+0.4,y-0.2,z+0.4,type,MC_Block[BlockID].Texture[frountID],hasColor);
+		}else
+		if (frountID==2)
+		{
+			AddParticle(x-0.2,y+0.5,z+0.4,type,MC_Block[BlockID].Texture[frountID],hasColor);
+		}else
+		if (frountID==3)
+		{
+			AddParticle(x+1.2,y+0.5,z+0.4,type,MC_Block[BlockID].Texture[frountID],hasColor);
+		}else
+		if (frountID==4)
+		{
+			AddParticle(x+0.4,y+0.5,z-0.2,type,MC_Block[BlockID].Texture[frountID],hasColor);
+		}else
+		if (frountID==5)
+		{
+			AddParticle(x+0.4,y+0.5,z+1.2,type,MC_Block[BlockID].Texture[frountID],hasColor);
+		}
+	}else if (type==0)
 	{
-		AddParticle(x+0.4,y+1.2,z+0.4,type,MC_Block[BlockID].Texture[0],hasColor);
+		AddParticle(x+0.5,y+0.5,z+0.5,type,MC_Block[BlockID].Texture[frountID],hasColor);
 	}
 	return TRUE;
 }

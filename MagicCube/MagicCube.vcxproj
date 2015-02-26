@@ -50,6 +50,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
+      <AdditionalOptions>/SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -118,6 +119,7 @@
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
       <EnableFiberSafeOptimizations Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</EnableFiberSafeOptimizations>
     </ClCompile>
+    <ClCompile Include="Mob.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Printf.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</Optimization>
@@ -168,6 +170,7 @@
     <ClInclude Include="Gobal.h" />
     <ClInclude Include="Listener.h" />
     <ClInclude Include="MagicCube.h" />
+    <ClInclude Include="Mob.h" />
     <ClInclude Include="OpenglWindows.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Player.h" />

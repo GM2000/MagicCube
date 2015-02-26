@@ -11,6 +11,7 @@ struct Player
 	int ChooseBlockX;
 	int ChooseBlockY;
 	int ChooseBlockZ;
+	int ChooseBlockFrount;
 
 	int PlayerBag[9];
 

@@ -7,10 +7,10 @@
 #include "File.h"
 #include "Gobal.h"
 
-
 int HeightFPS;
 int Horizon;
 int ParticleNumber;
+int MaxMobNumber;
 
 CString WorldName;
 
@@ -44,6 +44,7 @@ int MagicCubeInit()
 	mousespeed=50;
 	player.speed=0.1;
 	Horizon=3;
+	MaxMobNumber=1000;
 	shaking=true;
 	player.fly=false;
 	player.PlayerBag[0]=3;

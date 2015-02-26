@@ -38,7 +38,7 @@ int DrawMap(int ChunkListX,int ChunkListZ)
 			{
 				if (player.BreakTime>0)
 				{
-					autoAddParticle(ChooseBlockX+MoveChooseBlockX,ChooseBlockY,ChooseBlockZ+MoveChooseBlockZ,1,Chunk[ChooseBlockChunkID].BlockID[ChooseBlockX][ChooseBlockY][ChooseBlockZ]);
+					autoAddParticle(ChooseBlockX+MoveChooseBlockX,ChooseBlockY,ChooseBlockZ+MoveChooseBlockZ,1,Chunk[ChooseBlockChunkID].BlockID[ChooseBlockX][ChooseBlockY][ChooseBlockZ],player.ChooseBlockFrount);
 					BreakPrecent=player.BreakTime/player.BreakTimeNeed*9.5;
 					glBegin(GL_QUADS);
 					WriteDrawPointer(ChooseBlockX+MoveChooseBlockX,ChooseBlockY,ChooseBlockZ+MoveChooseBlockZ,0,-2,1,1,1,0);

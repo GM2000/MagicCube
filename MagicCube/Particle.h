@@ -27,4 +27,4 @@ extern particle Particle[1000];
 
 void Particles();
 
-int autoAddParticle(int x,int y,int z,int type,int BlockID);
+int autoAddParticle(int x,int y,int z,int type,int BlockID,int frountID);

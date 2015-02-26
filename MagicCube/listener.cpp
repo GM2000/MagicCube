@@ -6,6 +6,7 @@
 #include "Chunk.h"
 #include "Block.h"
 #include "Gobal.h"
+#include "Mob.h"
 
 const double PI = 3.141592653589793238462;
 
@@ -143,6 +144,36 @@ void keyboardListener()
 				{
 					if ((getBlockID(player.x+getLong*cos(player.upanddown*(PI/180))*sin(player.around*(PI/180)),player.y-getLong*sin(player.upanddown*(PI/180)),player.z-getLong*cos(player.upanddown*(PI/180))*cos(player.around*(PI/180)))!=0) & (!MC_Block[getBlockID(player.x+getLong*cos(player.upanddown*(PI/180))*sin(player.around*(PI/180)),player.y-getLong*sin(player.upanddown*(PI/180)),player.z-getLong*cos(player.upanddown*(PI/180))*cos(player.around*(PI/180)))].isLiquid))
 					{
+						int ChooseBlockX=player.x+getLong*cos(player.upanddown*(PI/180))*sin(player.around*(PI/180));
+						int ChooseBlockY=player.y-getLong*sin(player.upanddown*(PI/180));
+						int ChooseBlockZ=player.z-getLong*cos(player.upanddown*(PI/180))*cos(player.around*(PI/180));
+						int BehindBlockX=player.x+(getLong-0.01)*cos(player.upanddown*(PI/180))*sin(player.around*(PI/180));
+						int BehindBlockY=player.y-(getLong-0.01)*sin(player.upanddown*(PI/180));
+						int BehindBlockZ=player.z-(getLong-0.01)*cos(player.upanddown*(PI/180))*cos(player.around*(PI/180));
+						if (ChooseBlockY<BehindBlockY)
+						{
+							player.ChooseBlockFrount=0;
+						}
+						if (ChooseBlockY>BehindBlockY)
+						{
+							player.ChooseBlockFrount=1;
+						}
+						if (ChooseBlockX>BehindBlockX)
+						{
+							player.ChooseBlockFrount=2;
+						}
+						if (ChooseBlockX<BehindBlockX)
+						{
+							player.ChooseBlockFrount=3;
+						}
+						if (ChooseBlockZ>BehindBlockZ)
+						{
+							player.ChooseBlockFrount=4;
+						}
+						if (ChooseBlockZ<BehindBlockZ)
+						{
+							player.ChooseBlockFrount=5;
+						}
 						setBlockID(player.x+getLong*cos(player.upanddown*(PI/180))*sin(player.around*(PI/180)),player.y-getLong*sin(player.upanddown*(PI/180)),player.z-getLong*cos(player.upanddown*(PI/180))*cos(player.around*(PI/180)),-1);
 						hasGetBlock=true;
 						break;
@@ -383,6 +414,7 @@ int mouseLeftClick()
 					if (MC_Block[getBlockID(player.x+getLong*cos(player.upanddown*(PI/180))*sin(player.around*(PI/180)),player.y-getLong*sin(player.upanddown*(PI/180)),player.z-getLong*cos(player.upanddown*(PI/180))*cos(player.around*(PI/180)))].Hardness<=player.BreakTime)
 					{
 						player.BreakTime=0;
+						loadMob(1,getBlockID(player.x+getLong*cos(player.upanddown*(PI/180))*sin(player.around*(PI/180)),player.y-getLong*sin(player.upanddown*(PI/180)),player.z-getLong*cos(player.upanddown*(PI/180))*cos(player.around*(PI/180))),player.x+getLong*cos(player.upanddown*(PI/180))*sin(player.around*(PI/180)),player.y-getLong*sin(player.upanddown*(PI/180)),player.z-getLong*cos(player.upanddown*(PI/180))*cos(player.around*(PI/180)));
 						setBlockID(player.x+getLong*cos(player.upanddown*(PI/180))*sin(player.around*(PI/180)),player.y-getLong*sin(player.upanddown*(PI/180)),player.z-getLong*cos(player.upanddown*(PI/180))*cos(player.around*(PI/180)),0);
 					}
 					break;
