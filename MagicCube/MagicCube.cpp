@@ -9,6 +9,7 @@
 
 int HeightFPS;
 int Horizon;
+float fog;
 int ParticleNumber;
 int MaxMobNumber;
 
@@ -40,13 +41,15 @@ bool	firstInit=TRUE;
 int MagicCubeInit()
 {
 	ParticleNumber=100;
-	HeightFPS=40;
+	HeightFPS=25;
+	fog=27;
 	mousespeed=50;
 	player.speed=0.1;
-	Horizon=3;
+	Horizon=4;
 	MaxMobNumber=1000;
 	shaking=true;
 	player.fly=false;
+	/*
 	player.PlayerBag[0]=3;
 	player.PlayerBag[1]=2;
 	player.PlayerBag[2]=20;
@@ -56,6 +59,7 @@ int MagicCubeInit()
 	player.PlayerBag[6]=18;
 	player.PlayerBag[7]=6;
 	player.PlayerBag[8]=8;
+	*/
 	AddMCTexture();
 
 	InitBlockDate();
@@ -78,9 +82,9 @@ int InitGame(char *WorldLoadName)
 	{
 		srand((unsigned)time( NULL )); 
 		seed=rand();
-		player.x=100000;
+		player.x=1000;
 		player.y=100;
-		player.z=100000;
+		player.z=1000;
 		writeBasicDate();
 	}else{
 		readBasicDate();

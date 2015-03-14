@@ -26,6 +26,7 @@ void InitBlockDate()
 		MC_Block[i].Texture[3]=-1;
 		MC_Block[i].Texture[4]=-1;
 		MC_Block[i].Texture[5]=-1;
+		MC_Block[i].itemType=MC_BLOCK;
 	}
 
 	MC_Block[0].hyaline=true;
@@ -127,6 +128,8 @@ void InitBlockDate()
 	MC_Block[6].Hardness=0;
 
 	MC_Block[6].Texture[0]=SAPLING_BIRCH;
+
+	MC_Block[6].itemType=MC_ITEM;
 	//8
 	MC_Block[8].BlockName="ˮ";
 	

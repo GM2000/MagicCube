@@ -28,6 +28,7 @@ struct Player
 	bool fly;
 	bool isJumping;
 	bool onGround;
+	bool inWater;
 
 	float jumpSpeed;
 

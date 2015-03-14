@@ -20,6 +20,7 @@ int GameScrNum;
 void LoadChunk();
 
 HANDLE KeyboardListener;
+HANDLE gobalListener;
 HANDLE WorldRebuild;
 
 int MouseTimer;
@@ -126,10 +127,6 @@ LRESULT CALLBACK WndProc(	HWND	hWnd,					// 窗口的句柄
 			WindowsWidth=LOWORD(lParam);
 			ReSizeGLScene(LOWORD(lParam),HIWORD(lParam));		// LoWord=Width,HiWord=Height
 			return 0;						// 返回
-		}
-		case WM_MOUSEMOVE:								// 鼠标移动
-		{
-			return 0;								// 回
 		}
 		case WM_LBUTTONDOWN:
 		{
@@ -365,7 +362,9 @@ int WINAPI WinMain(	HINSTANCE	hInstance,				// 当前窗口实例
 
 	isPause=false;
 
-	KeyboardListener=CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)keyboardListener,NULL,0,NULL);
+	gobalListener=CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)GobalListener,NULL,0,NULL);
+
+	KeyboardListener=CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)KeyBoardListener,NULL,0,NULL);
 
 	WorldRebuild=CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)LoadChunk,NULL,0,NULL);
 

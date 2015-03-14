@@ -107,5 +107,8 @@
     <ClCompile Include="Mob.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

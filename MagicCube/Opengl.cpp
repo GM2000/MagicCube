@@ -28,8 +28,8 @@ int InitGL(GLvoid)								// 此处开始对OpenGL进行所有设置
 	glEnable(GL_FOG);
 	glFogfv(GL_FOG_COLOR,fogColor);
 	glFogi(GL_FOG_MODE, GL_LINEAR);
-	glFogf(GL_FOG_START, 10.0f+Horizon*16);
-	glFogf(GL_FOG_END, 27.0f+Horizon*16);
+	glFogf(GL_FOG_START, fog+Horizon*16);
+	glFogf(GL_FOG_END, fog+10+Horizon*16);
 	glHint(GL_FOG_HINT, GL_DONT_CARE);
 
 	////////////////////////////////////////////////

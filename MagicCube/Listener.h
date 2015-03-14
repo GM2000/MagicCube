@@ -1,2 +1,3 @@
-void keyboardListener();
+void GobalListener();
+void KeyBoardListener();
 void MouseEvent();

@@ -1,3 +1,6 @@
+#define MC_BLOCK 0
+#define MC_ITEM 1
+
 struct block
 {
 	char *BlockName;
@@ -9,6 +12,7 @@ struct block
 	bool isLeaf;
 	bool isPlant;
 	bool isLiquid;
+	int itemType;
 	int Hardness;
 	int Texture[6];
 };

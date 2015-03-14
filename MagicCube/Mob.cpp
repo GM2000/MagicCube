@@ -7,6 +7,8 @@
 mob Mob[10000];
 int NowMobNumber=0;
 
+bool addInventory(int BlockID,int Number);
+
 int drawMob(int i)
 {
 	if (Mob[i].mobType==MOB_FALLING_ITEM)
@@ -19,112 +21,133 @@ int drawMob(int i)
 		float z=Mob[i].z;
 
 		glBegin(GL_QUADS);
-		if ((MC_Block[Mob[i].mobTag[0]].isGrass) | (MC_Block[Mob[i].mobTag[0]].isLeaf))
+		if (MC_Block[Mob[i].mobTag[0]].itemType==MC_BLOCK)
 		{
-			glColor3f(0.6f,1.0f,0.4f);				// 设置当前色为黑
-		}else{
+			if ((MC_Block[Mob[i].mobTag[0]].isGrass) | (MC_Block[Mob[i].mobTag[0]].isLeaf))
+			{
+				glColor3f(0.6f,1.0f,0.4f);				// 设置当前色为黑
+			}else{
+				glColor3f(1.0f,1.0f,1.0f);				// 设置当前色为黑
+			}
+			//右前点
+			glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
+			glVertex3f(x,y+0.25,z);
+			//左前点
+			glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
+			glVertex3f(x,y+0.25,z+0.25);
+			//左后点
+			glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
+			glVertex3f(x+0.25,y+0.25,z+0.25);
+			//右后点
+			glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
+			glVertex3f(x+0.25,y+0.25,z);
+
+			TextureID=MC_Block[Mob[i].mobTag[0]].Texture[1];
+			TextureZ=TextureID/16;
+			TextureX=TextureID-TextureZ*16;
+
+			if (!MC_Block[Mob[i].mobTag[0]].isLeaf)
+			{
+				glColor3f(1.0f,1.0f,1.0f);				// 设置当前色为黑
+			}
+
+			glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
+			glVertex3f(x,y,z);
+			//左前点
+			glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
+			glVertex3f(x,y,z+0.25);
+			//左后点
+			glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
+			glVertex3f(x+0.25,y,z+0.25);
+			//右后点
+			glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
+			glVertex3f(x+0.25,y,z);
+
+			TextureID=MC_Block[Mob[i].mobTag[0]].Texture[2];
+			TextureZ=TextureID/16;
+			TextureX=TextureID-TextureZ*16;
+
+			glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
+			glVertex3f(x,y+0.25,z+0.25);
+			//左前点
+			glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
+			glVertex3f(x,y,z+0.25);
+			//左后点
+			glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
+			glVertex3f(x,y,z);
+			//右后点
+			glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
+			glVertex3f(x,y+0.25,z);
+
+			TextureID=MC_Block[Mob[i].mobTag[0]].Texture[3];
+			TextureZ=TextureID/16;
+			TextureX=TextureID-TextureZ*16;
+
+			glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
+			glVertex3f(x+0.25,y+0.25,z+0.25);
+			//左前点
+			glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
+			glVertex3f(x+0.25,y,z+0.25);
+			//左后点
+			glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
+			glVertex3f(x+0.25,y,z);
+			//右后点
+			glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
+			glVertex3f(x+0.25,y+0.25,z);
+
+			TextureID=MC_Block[Mob[i].mobTag[0]].Texture[4];
+			TextureZ=TextureID/16;
+			TextureX=TextureID-TextureZ*16;
+
+			glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
+			glVertex3f(x+0.25,y+0.25,z+0.25);
+			//左前点
+			glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
+			glVertex3f(x+0.25,y,z+0.25);
+			//左后点
+			glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
+			glVertex3f(x,y,z+0.25);
+			//右后点
+			glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
+			glVertex3f(x,y+0.25,z+0.25);
+
+			TextureID=MC_Block[Mob[i].mobTag[0]].Texture[5];
+			TextureZ=TextureID/16;
+			TextureX=TextureID-TextureZ*16;
+
+			glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
+			glVertex3f(x+0.25,y+0.25,z);
+			//左前点
+			glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
+			glVertex3f(x+0.25,y,z);
+			//左后点
+			glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
+			glVertex3f(x,y,z);
+			//右后点
+			glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
+			glVertex3f(x,y+0.25,z);
+
 			glColor3f(1.0f,1.0f,1.0f);				// 设置当前色为黑
-		}
-		//右前点
-		glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
-		glVertex3f(x,y+0.25,z);
-		//左前点
-		glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
-		glVertex3f(x,y+0.25,z+0.25);
-		//左后点
-		glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
-		glVertex3f(x+0.25,y+0.25,z+0.25);
-		//右后点
-		glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
-		glVertex3f(x+0.25,y+0.25,z);
 
-		TextureID=MC_Block[Mob[i].mobTag[0]].Texture[1];
-		TextureZ=TextureID/16;
-		TextureX=TextureID-TextureZ*16;
-
-		if (!MC_Block[Mob[i].mobTag[0]].isLeaf)
+		}else if (MC_Block[Mob[i].mobTag[0]].itemType==MC_ITEM)
 		{
 			glColor3f(1.0f,1.0f,1.0f);				// 设置当前色为黑
+			TextureID=MC_Block[Mob[i].mobTag[0]].Texture[0];
+			TextureZ=TextureID/16;
+			TextureX=TextureID-TextureZ*16;
+
+			glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
+			glVertex3f(x,y+0.25,z+0.25);
+			//左前点
+			glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
+			glVertex3f(x,y,z+0.25);
+			//左后点
+			glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
+			glVertex3f(x,y,z);
+			//右后点
+			glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
+			glVertex3f(x,y+0.25,z);
 		}
-
-		glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
-		glVertex3f(x,y,z);
-		//左前点
-		glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
-		glVertex3f(x,y,z+0.25);
-		//左后点
-		glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
-		glVertex3f(x+0.25,y,z+0.25);
-		//右后点
-		glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
-		glVertex3f(x+0.25,y,z);
-
-		TextureID=MC_Block[Mob[i].mobTag[0]].Texture[2];
-		TextureZ=TextureID/16;
-		TextureX=TextureID-TextureZ*16;
-
-		glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
-		glVertex3f(x,y+0.25,z+0.25);
-		//左前点
-		glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
-		glVertex3f(x,y,z+0.25);
-		//左后点
-		glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
-		glVertex3f(x,y,z);
-		//右后点
-		glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
-		glVertex3f(x,y+0.25,z);
-
-		TextureID=MC_Block[Mob[i].mobTag[0]].Texture[3];
-		TextureZ=TextureID/16;
-		TextureX=TextureID-TextureZ*16;
-
-		glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
-		glVertex3f(x+0.25,y+0.25,z+0.25);
-		//左前点
-		glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
-		glVertex3f(x+0.25,y,z+0.25);
-		//左后点
-		glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
-		glVertex3f(x+0.25,y,z);
-		//右后点
-		glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
-		glVertex3f(x+0.25,y+0.25,z);
-
-		TextureID=MC_Block[Mob[i].mobTag[0]].Texture[4];
-		TextureZ=TextureID/16;
-		TextureX=TextureID-TextureZ*16;
-
-		glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
-		glVertex3f(x+0.25,y+0.25,z+0.25);
-		//左前点
-		glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
-		glVertex3f(x+0.25,y,z+0.25);
-		//左后点
-		glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
-		glVertex3f(x,y,z+0.25);
-		//右后点
-		glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
-		glVertex3f(x,y+0.25,z+0.25);
-
-		TextureID=MC_Block[Mob[i].mobTag[0]].Texture[5];
-		TextureZ=TextureID/16;
-		TextureX=TextureID-TextureZ*16;
-
-		glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
-		glVertex3f(x+0.25,y+0.25,z);
-		//左前点
-		glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
-		glVertex3f(x+0.25,y,z);
-		//左后点
-		glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
-		glVertex3f(x,y,z);
-		//右后点
-		glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
-		glVertex3f(x,y+0.25,z);
-
-		glColor3f(1.0f,1.0f,1.0f);				// 设置当前色为黑
-
 		glEnd();
 	}
 	return TRUE;
@@ -153,6 +176,15 @@ void reSetMob()
 					Mob[i].yMove+=0.003;
 				}
 			}
+			///////////////////////////检测是否被捡到////////////////
+			if (sqrt((float)(((int)Mob[i].x-(int)player.x) * ((int)Mob[i].x-(int)player.x) + ((int)Mob[i].y-(int)player.y) * ((int)Mob[i].y-(int)player.y) + ((int)Mob[i].z-(int)player.z) * ((int)Mob[i].z-(int)player.z)))<2)
+			{
+				if (addInventory(Mob[i].mobTag[0],1))
+				{
+					Mob[i].mobType=-1;
+				}
+			}
+			/////////////////////////////////////////////////////////
 			Mob[i].y+=Mob[i].yMove;
 			drawMob(i);
 			Mob[i].y-=Mob[i].yMove;

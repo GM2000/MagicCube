@@ -4,3 +4,4 @@ extern int ParticleNumber;
 extern int MaxMobNumber;
 
 extern bool shaking;
+extern float fog;

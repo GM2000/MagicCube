@@ -37,7 +37,6 @@ int FPS=0;
 int SZZX()
 {
 	glEnable( GL_BLEND );
-	glLoadIdentity();							// 重置当前的模型观察矩阵
 	glBindTexture(GL_TEXTURE_2D,toolbar);				// 选择纹理
 	glBegin(GL_QUADS); 
 	glTexCoord2f(22/256.0f, 236/256.0f); 
@@ -58,28 +57,40 @@ int SZZX()
 
 int DrawCube(int X,int TextureID)
 {
-	int TextureX;
-	int TextureZ;
-	TextureZ=TextureID/16;
-	TextureX=TextureID-TextureZ*16;
-	glBindTexture(GL_TEXTURE_2D, texture);				// 选择纹理
-	glBegin(GL_QUADS);							//  绘制工具栏选择框
-	glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
-	glVertex3f((X-1)*20*0.000455-0.039f-0.000455, -0.039755f,-0.1f);
-	glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
-	glVertex3f((X)*20*0.000455-0.043f+0.000455, -0.039755f,-0.1f);
-	glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16); 
-	glVertex3f((X)*20*0.000455-0.043f+0.000455,-0.033745f,-0.1f);
-	glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
-	glVertex3f((X-1)*20*0.000455-0.039f-0.000455,-0.033745f,-0.1f);
-	glEnd();	
+	if (TextureID!=-1)
+	{
+		int TextureX;
+		int TextureZ;
+		TextureZ=TextureID/16;
+		TextureX=TextureID-TextureZ*16;
+		glBindTexture(GL_TEXTURE_2D, texture);				// 选择纹理
+		glBegin(GL_QUADS);							//  绘制工具栏选择框
+		/*
+		glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
+		glVertex3f((X-1)*20*0.000455-0.039f-0.000455, -0.039755f,-0.1f);
+		glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
+		glVertex3f((X)*20*0.000455-0.043f+0.000455, -0.039755f,-0.1f);
+		glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16); 
+		glVertex3f((X)*20*0.000455-0.043f+0.000455,-0.033745f,-0.1f);
+		glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
+		glVertex3f((X-1)*20*0.000455-0.039f-0.000455,-0.033745f,-0.1f);
+		*/
+		glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
+		glVertex3f((X-1)*20*0.000455-0.039f-0.000455, -0.039755f,-0.1f);
+		glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
+		glVertex3f((X)*20*0.000455-0.043f+0.000455, -0.039755f,-0.1f);
+		glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16); 
+		glVertex3f((X)*20*0.000455-0.043f+0.000455,-0.0352475f,-0.1f);
+		glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
+		glVertex3f((X-1)*20*0.000455-0.039f-0.000455,-0.0352475f,-0.1f);
+		glEnd();	
+	}
 	return TRUE;
 }
 
 int ToolBar()
 {
 	glEnable( GL_BLEND );
-	glLoadIdentity();							// 重置当前的模型观察矩阵
 	glBindTexture(GL_TEXTURE_2D, toolbar);				// 选择纹理
 	glBegin(GL_QUADS);							//  绘制工具栏
 	glTexCoord2f(0.0f, 236/256.0f); glVertex3f(-0.041f, -0.0413f,-0.1f);	// 纹理和四边形的左下
@@ -100,6 +111,11 @@ int ToolBar()
 	glVertex3f((player.choiceNumber)*20*0.000455-0.041f-0.000455,-0.031745f,-0.1f);
 	glEnd();	
 	/////////////////////////////////////////////////////////////////////////
+	for (int i=0;i<9;i++)
+	{
+		DrawCube(i+1,MC_Block[player.PlayerBag[i]].Texture[2]);
+	}
+	/*
 	DrawCube(1,0);
 	DrawCube(2,1);
 	DrawCube(3,16);
@@ -109,6 +125,7 @@ int ToolBar()
 	DrawCube(7,18);
 	DrawCube(8,19);
 	DrawCube(9,6);
+	*/
 	/////////////////////////////////////////////////////////////////////////
 	glDisable( GL_BLEND );
 	return 1;
@@ -158,37 +175,64 @@ void DrawMap()
 			glCallList((ChunkList[i][j]+1)*2+1);
 		}
 	}
+
 	Particles();
 	reSetMob();
+
+	glLoadIdentity();
+
+	int TextureX;
+	int TextureZ;
+	TextureZ=MC_Block[getBlockID(player.x,player.y,player.z)].Texture[0]/16;
+	TextureX=MC_Block[getBlockID(player.x,player.y,player.z)].Texture[0]-TextureZ*16;
+	glBegin(GL_QUADS);
+	glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
+	glVertex3f(-1,1,-1);
+	//左前点
+	glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
+	glVertex3f(-1,-1,-1);
+	//左后点
+	glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
+	glVertex3f(1,-1,-1);
+	//右后点
+	glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
+	glVertex3f(1,1,-1);
+	glEnd();
 }
 int DrawGLScene(GLvoid)								// 从这里开始进行所有的绘制
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);			// 清除屏幕和深度缓存
+
+	glLoadIdentity();							// 重置当前的模型观察矩阵
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );			// 清除屏幕和深度缓存
 	if (GameScrNum==1)
 	{
-		if ((FirstLoafFinish) & (!saving))
+		if (FirstLoafFinish)
 		{
-			float startTime = GetTickCount()*0.001f;
+			float upanddown=player.upanddown;
+			float around=player.around;
+			float PlayerX=player.x;
+			float PlayerY=player.y;
+			float PlayerZ=player.z;
 
-			glLoadIdentity();							// 重置当前的模型观察矩阵
-			glRotatef(player.upanddown,1,0,0);
+			float startTime = GetTickCount()*0.001f;
+			glRotatef(upanddown,1,0,0);
 			glTranslatef(shakingDegX/3,shakingDegY/3,0);						        // 人物移动
-			glRotatef(player.around,0,1,0);
-			glTranslatef(-player.x,-player.y,-player.z);						        // 人物移动
+			glRotatef(around,0,1,0);
+			glTranslatef(-PlayerX,-PlayerY,-PlayerZ);						        // 人物移动
+
 			DrawMap();
 
-			float nowTime = GetTickCount()*0.001f;   
+			ToolBar();
+			SZZX();
 
+			float nowTime = GetTickCount()*0.001f;   
+			
 			while (!(nowTime-startTime>1.0/HeightFPS))
 			{
 				nowTime = GetTickCount()*0.001f; 
 			}
 
-			if (!isPause)
-			{
-				ToolBar();
-				SZZX();
-			}
 			if (nowTime-startTime>0)
 			{
 				FPS=FPSTime/(nowTime-currentTime);
@@ -201,6 +245,13 @@ int DrawGLScene(GLvoid)								// 从这里开始进行所有的绘制
 			CString strFrameRate;
 			strFrameRate.Format("%d", FPS);
 			SetWindowText(hWnd, strFrameRate);
+
+			glLoadIdentity();							// 重置当前的模型观察矩阵
+			glRotatef(player.upanddown,1,0,0);
+			glTranslatef(shakingDegX/3,shakingDegY/3,0);						        // 人物移动
+			glRotatef(player.around,0,1,0);
+			glTranslatef(-player.x,-player.y,-player.z);						        // 人物移动
+
 
 		}else if (!FirstLoafFinish)
 		{
@@ -324,8 +375,6 @@ int DrawGLScene(GLvoid)								// 从这里开始进行所有的绘制
 			}
 			glEnd();
 
-			glTranslatef(0,0,-1);
-
 			drawChar_To_Texture("结",WindowsWidth/2.083-WindowsHeight/14-WindowsHeight/28,WindowsHeight/3.35,WindowsHeight/12);
 			drawChar_To_Texture("束",WindowsWidth/2.083-WindowsHeight/14+WindowsHeight/28,WindowsHeight/3.35,WindowsHeight/12);
 			drawChar_To_Texture("游",WindowsWidth/2.083+WindowsHeight/14-WindowsHeight/28,WindowsHeight/3.35,WindowsHeight/12);
@@ -338,48 +387,8 @@ int DrawGLScene(GLvoid)								// 从这里开始进行所有的绘制
 
 			glEnable(GL_DEPTH_TEST);
 		}
-
-		if (saving)
-		{
-			SetWindowText(hWnd, "游戏保存界面测试");
-			int TextureX=0;
-			int TextureZ=0;
-			int WinWN=WindowsWidth/87+3;
-			int WinHN=WindowsHeight/74+3;
-			for (int i=-WinWN;i<WinWN;i++)
-			{
-				for (int j=0;j<WinHN;j++)
-				{
-					glEnable(GL_BLEND);
-					glDisable(GL_DEPTH_TEST);
-					glLoadIdentity();							// 重置当前的模型观察矩阵
-					glBindTexture(GL_TEXTURE_2D,texture);
-					glBegin(GL_QUADS);
-					//右前点
-					glColor4f(1.0,1.0,1.0,1.0);
-					glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
-					glVertex3f(i-4,j-4,-7);
-					//左前点
-					glTexCoord2f(TextureX/16.0,(15.0-TextureZ)/16);
-					glVertex3f(i-4,j-5,-7);
-					//左后点
-					glTexCoord2f((TextureX+1.0)/16,(15.0-TextureZ)/16);
-					glVertex3f(i-5,j-5,-7);
-					//右后点
-					glTexCoord2f((TextureX+1.0)/16,(16.0-TextureZ)/16);
-					glVertex3f(i-5,j-4,-7);
-					glEnd();
-					glEnable(GL_DEPTH_TEST);
-				}
-			}
-			drawChar_To_Texture("保",WindowsWidth/2.083-WindowsHeight/14-WindowsHeight/28,WindowsHeight/1.9,WindowsHeight/12);
-			drawChar_To_Texture("存",WindowsWidth/2.083-WindowsHeight/14+WindowsHeight/28,WindowsHeight/1.9,WindowsHeight/12);
-			drawChar_To_Texture("地",WindowsWidth/2.083+WindowsHeight/14-WindowsHeight/28,WindowsHeight/1.9,WindowsHeight/12);
-			drawChar_To_Texture("图",WindowsWidth/2.083+WindowsHeight/14+WindowsHeight/28,WindowsHeight/1.9,WindowsHeight/12);
-		}
 	}else if (GameScrNum==0){
 		SetWindowText(hWnd, "游戏开始界面测试");
-		glLoadIdentity();							// 重置当前的模型观察矩阵
 		glEnable(GL_BLEND);
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_ALPHA_TEST);
@@ -399,7 +408,6 @@ int DrawGLScene(GLvoid)								// 从这里开始进行所有的绘制
 
 
 		glBindTexture(GL_TEXTURE_2D,toolbar);
-		glLoadIdentity();							// 重置当前的模型观察矩阵
 		glBegin(GL_QUADS);
 		//开始游戏
 		if (startGameBottomInScr0)
@@ -493,7 +501,6 @@ int DrawGLScene(GLvoid)								// 从这里开始进行所有的绘制
 			{
 				glEnable(GL_BLEND);
 				glDisable(GL_DEPTH_TEST);
-				glLoadIdentity();							// 重置当前的模型观察矩阵
 				glBindTexture(GL_TEXTURE_2D,texture);
 				glBegin(GL_QUADS);
 				//右前点

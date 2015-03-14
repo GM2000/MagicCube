@@ -73,6 +73,8 @@ void setBlockID(float x,float y,float z,int BlockID)
 	int ChunkZ;
 	int LocChunkX;
 	int LocChunkZ;
+	int PlayerChunkX=player.ChunkX;
+	int PlayerChunkZ=player.ChunkZ;
 	if (x/16<0)
 	{
 		LocChunkX=x/16-1;
@@ -85,6 +87,7 @@ void setBlockID(float x,float y,float z,int BlockID)
 	}else{
 		LocChunkZ=z/16;
 	}
+	/*
 	if (LocChunkX>player.ChunkX)
 	{
 		ChunkX=player.ChunkX+1;
@@ -101,7 +104,16 @@ void setBlockID(float x,float y,float z,int BlockID)
 	}else{
 		ChunkZ=player.ChunkZ;
 	}
-	int ChunkID=ChunkList[7+ChunkX-player.ChunkX][7+ChunkZ-player.ChunkZ];
+	*/
+	int ChunkID;
+	ChunkX=LocChunkX-PlayerChunkX;
+	ChunkZ=LocChunkZ-PlayerChunkZ;
+	if ((ChunkX<-7) | (ChunkZ<-7))
+	{
+		ChunkID=-1;
+	}else{
+		ChunkID=ChunkList[7+ChunkX][7+ChunkZ];
+	}
 	int NowBlockID=Chunk[ChunkID].BlockID[(int)(x-Chunk[ChunkID].chunkX*16)][(int)y][(int)(z-Chunk[ChunkID].chunkZ*16)];
 	if ((ChunkID>-1) & (ChunkID<225))
 	{
@@ -136,21 +148,33 @@ void setBlockID(float x,float y,float z,int BlockID)
 				{
 					Chunk[ChunkID].BlockID[(int)(x-Chunk[ChunkID].chunkX*16)][(int)y+1][(int)(z-Chunk[ChunkID].chunkZ*16)]=0;
 				}
-				Chunk[ChunkList[7+ChunkX-player.ChunkX][7+ChunkZ-player.ChunkZ]].isCreateList=false;
-				Chunk[ChunkList[7+ChunkX-player.ChunkX][7+ChunkZ-player.ChunkZ+1]].isCreateList=false;
-				Chunk[ChunkList[7+ChunkX-player.ChunkX][7+ChunkZ-player.ChunkZ-1]].isCreateList=false;
-				Chunk[ChunkList[7+ChunkX-player.ChunkX+1][7+ChunkZ-player.ChunkZ]].isCreateList=false;
-				Chunk[ChunkList[7+ChunkX-player.ChunkX-1][7+ChunkZ-player.ChunkZ]].isCreateList=false;
-				Chunk[ChunkList[7+ChunkX-player.ChunkX][7+ChunkZ-player.ChunkZ]].mustCreateListNow=true;
-				Chunk[ChunkList[7+ChunkX-player.ChunkX][7+ChunkZ-player.ChunkZ+1]].mustCreateListNow=true;
-				Chunk[ChunkList[7+ChunkX-player.ChunkX][7+ChunkZ-player.ChunkZ-1]].mustCreateListNow=true;
-				Chunk[ChunkList[7+ChunkX-player.ChunkX+1][7+ChunkZ-player.ChunkZ]].mustCreateListNow=true;
-				Chunk[ChunkList[7+ChunkX-player.ChunkX-1][7+ChunkZ-player.ChunkZ]].mustCreateListNow=true;
+				Chunk[ChunkList[7+ChunkX][7+ChunkZ]].isCreateList=false;
+				Chunk[ChunkList[7+ChunkX][7+ChunkZ]].mustCreateListNow=true;
+				if ((int)(x-Chunk[ChunkID].chunkX*16)==0)
+				{
+					Chunk[ChunkList[6+ChunkX][7+ChunkZ]].isCreateList=false;
+					Chunk[ChunkList[6+ChunkX][7+ChunkZ]].mustCreateListNow=true;
+				}
+				if ((int)(x-Chunk[ChunkID].chunkX*16)==15)
+				{
+					Chunk[ChunkList[8+ChunkX][7+ChunkZ]].isCreateList=false;
+					Chunk[ChunkList[8+ChunkX][7+ChunkZ]].mustCreateListNow=true;
+				}
+				if ((int)(z-Chunk[ChunkID].chunkZ*16)==0)
+				{
+					Chunk[ChunkList[7+ChunkX][6+ChunkZ]].isCreateList=false;
+					Chunk[ChunkList[7+ChunkX][6+ChunkZ]].mustCreateListNow=true;
+				}
+				if ((int)(z-Chunk[ChunkID].chunkZ*16)==15)
+				{
+					Chunk[ChunkList[7+ChunkX][8+ChunkZ]].isCreateList=false;
+					Chunk[ChunkList[7+ChunkX][8+ChunkZ]].mustCreateListNow=true;
+				}
 			}else if (BlockID=-1){
-				if ((player.ChooseBlockChunkID!=ChunkList[7+ChunkX-player.ChunkX][7+ChunkZ-player.ChunkZ]) | (player.ChooseBlockX!=(int)(x-Chunk[ChunkID].chunkX*16)) | (player.ChooseBlockY!=(int)y) | (player.ChooseBlockZ!=(int)(z-Chunk[ChunkID].chunkZ*16)))
+				if ((player.ChooseBlockChunkID!=ChunkID) | (player.ChooseBlockX!=(int)(x-Chunk[ChunkID].chunkX*16)) | (player.ChooseBlockY!=(int)y) | (player.ChooseBlockZ!=(int)(z-Chunk[ChunkID].chunkZ*16)))
 				{
 					player.BreakTime=0;
-					player.ChooseBlockChunkID=ChunkList[7+ChunkX-player.ChunkX][7+ChunkZ-player.ChunkZ];
+					player.ChooseBlockChunkID=ChunkID;
 					player.ChooseBlockX=(int)(x-Chunk[ChunkID].chunkX*16);
 					player.ChooseBlockY=(int)y;
 					player.ChooseBlockZ=(int)(z-Chunk[ChunkID].chunkZ*16);
@@ -163,8 +187,8 @@ void setBlockID(float x,float y,float z,int BlockID)
 
 int InitChunk(int ChunkID,int ChunkX,int ChunkZ,bool isFirst)
 {
-	Chunk[ChunkID].isCreateList=false;
 	Chunk[ChunkID].mustCreateListNow=false;
+	Chunk[ChunkID].isCreateList=false;
 	if (isFirst)
 	{
 		ChunkInfo[ChunkID].NeedSave=false;

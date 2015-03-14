@@ -10,6 +10,7 @@ extern bool LBottom;
 extern bool RBottom;
 
 extern HANDLE KeyboardListener;
+extern HANDLE gobalListener;
 extern HANDLE WorldRebuild;
 
 extern int FPS;

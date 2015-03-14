@@ -118,10 +118,296 @@ int mouse()
 	return 1;
 }
 
-void keyboardListener()
+void KeyBoardListener()
 {
-	float lastTime = GetTickCount()*0.001f;
-	float KeyBoardTick=GetTickCount();   ;
+	float KeyBoardTick=GetTickCount();   
+	while (!done)
+	{
+		if ((GetTickCount()-KeyBoardTick>13) & FirstLoafFinish & (!isPause))
+		{
+			bool isKeyDown=false;
+			float needAddTime=(GetTickCount()-KeyBoardTick)/13;
+			MouseTimer++;
+			KeyBoardTick=GetTickCount();
+
+			float xMove;
+			float yMove;
+			float zMove;
+
+			//按键检测在此！
+			if (keys[49])//1
+			{
+				player.choiceNumber=0;
+			}
+			if (keys[50])//2
+			{
+				player.choiceNumber=1;
+			}
+			if (keys[51])//3
+			{
+				player.choiceNumber=2;
+			}
+			if (keys[52])//4
+			{
+				player.choiceNumber=3;
+			}
+			if (keys[53])//5
+			{
+				player.choiceNumber=4;
+			}
+			if (keys[54])//6
+			{
+				player.choiceNumber=5;
+			}
+			if (keys[55])//7
+			{
+				player.choiceNumber=6;
+			}
+			if (keys[56])//8
+			{
+				player.choiceNumber=7;
+			}
+			if (keys[57])//9
+			{
+				player.choiceNumber=8;
+			}
+
+			if (keys[87])//W
+			{
+				isKeyDown=true;
+				if (player.inWater)
+				{
+					player.speed=0.05;
+					player.y+=player.speed*needAddTime/5;
+					if (isTouch())
+					{
+						player.y-=player.speed*needAddTime/5;
+					}
+				}else{
+					player.speed=0.1;
+				}
+
+				xMove=sin(player.around*(PI/180))*(player.speed*needAddTime);
+				zMove=-cos(player.around*(PI/180))*(player.speed*needAddTime);
+
+				player.x+=xMove;
+
+				if (isTouch())
+				{
+					player.x-=xMove;
+				}
+				player.z+=zMove;
+				if (isTouch())
+				{
+					player.z-=zMove;
+				}
+			}
+			if (keys[83])//S
+			{
+				isKeyDown=true;
+				if (player.inWater)
+				{
+					player.speed=0.05;
+					player.y+=player.speed*needAddTime/5;
+					if (isTouch())
+					{
+						player.y-=player.speed*needAddTime/5;
+					}
+				}else{
+					player.speed=0.1;
+				}
+
+				xMove=-sin(player.around*(PI/180))*(player.speed*needAddTime);
+				zMove=cos(player.around*(PI/180))*(player.speed*needAddTime);
+
+				player.x+=xMove;
+
+				if (isTouch())
+				{
+					player.x-=xMove;
+				}
+				player.z+=zMove;
+				if (isTouch())
+				{
+					player.z-=zMove;
+				}
+			}
+			if (keys[65])//A
+			{
+				isKeyDown=true;
+				if (player.inWater)
+				{
+					player.speed=0.05;
+					player.y+=player.speed*needAddTime/5;
+					if (isTouch())
+					{
+						player.y-=player.speed*needAddTime/5;
+					}
+				}else{
+					player.speed=0.1;
+				}
+
+				xMove=-cos(player.around*(PI/180))*(player.speed*needAddTime);
+				zMove=-sin(player.around*(PI/180))*(player.speed*needAddTime);
+
+				player.x+=xMove;
+
+				if (isTouch())
+				{
+					player.x-=xMove;
+				}
+				player.z+=zMove;
+				if (isTouch())
+				{
+					player.z-=zMove;
+				}
+			}
+			if (keys[68])//D
+			{
+				isKeyDown=true;
+				if (player.inWater)
+				{
+					player.speed=0.05;
+					player.y+=player.speed*needAddTime/5;
+					if (isTouch())
+					{
+						player.y-=player.speed*needAddTime/5;
+					}
+				}else{
+					player.speed=0.1;
+				}
+
+				xMove=-cos((player.around+180)*(PI/180))*(player.speed*needAddTime);
+				zMove=-sin((player.around+180)*(PI/180))*(player.speed*needAddTime);
+
+				player.x+=xMove;
+
+				if (isTouch())
+				{
+					player.x-=xMove;
+				}
+				player.z+=zMove;
+				if (isTouch())
+				{
+					player.z-=zMove;
+				}
+			}
+			if (player.fly)
+			{
+				if (keys[16])//shift
+				{
+					yMove=-player.speed*needAddTime;
+					player.y+=yMove;
+					if (isTouch())
+					{
+						player.y-=yMove;
+
+					}
+				}
+				if (keys[32])//space
+				{
+					yMove=player.speed*needAddTime;
+					player.y+=yMove;
+					if (isTouch())
+					{
+						player.y-=yMove;
+					}
+				}
+			}else{
+ 				if ((keys[32]) & (!player.isJumping) & (player.onGround))//space
+				{
+					if (player.inWater)
+					{
+						player.y+=0.03*needAddTime/5;
+					}
+					else if ((!MC_Block[getBlockID(player.x+0.2,player.y+0.1,player.z+0.2)].isSoil) & (!MC_Block[getBlockID(player.x-0.2,player.y+0.1,player.z-0.2)].isSoil) & (!MC_Block[getBlockID(player.x+0.2,player.y+0.1,player.z-0.2)].isSoil) & (!MC_Block[getBlockID(player.x-0.2,player.y+0.1,player.z+0.2)].isSoil))
+					{
+						player.isJumping=true;
+						player.onGround=false;
+						player.jumpSpeed=0.1;
+					}
+				}
+				if ((!player.inWater) & (player.isJumping))
+				{
+					player.jumpSpeed-=0.006;
+					player.y+=player.jumpSpeed*1.6;
+					if ((MC_Block[getBlockID(player.x+0.2,player.y+0.1,player.z+0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y+0.1,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y+0.1,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y+0.1,player.z+0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y-1.6,player.z+0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y-1.6,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y-1.6,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y-1.6,player.z+0.2)].isSoil))
+					{
+						player.y-=player.jumpSpeed*1.6;
+						player.isJumping=false;
+					}
+				}else if ((player.inWater) & (!isKeyDown)){
+					player.y-=0.02;
+					player.onGround=false;
+					if ((MC_Block[getBlockID(player.x-0.2,player.y-1.6,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y-1.6,player.z+0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y-1.6,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y-1.6,player.z+0.2)].isSoil))
+					{
+						player.y+=0.02;
+						player.onGround=true;
+					}
+				}else if (!player.inWater){
+					player.dropSpeed+=player.g*1.02;
+					player.y-=player.dropSpeed;
+					player.onGround=false;
+					if ((MC_Block[getBlockID(player.x-0.2,player.y-1.6,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y-1.6,player.z+0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y-1.6,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y-1.6,player.z+0.2)].isSoil))
+					{
+						player.y+=player.dropSpeed;
+						player.dropSpeed=0;
+						player.onGround=true;
+					}
+				}
+			}
+			if ((shaking) & (!player.fly) & (!player.inWater))
+			{
+				if((keys[87])|(keys[83])|(keys[65])|(keys[68])|(!shakingFinish))
+				{
+					if((keys[87])|(keys[83])|(keys[65])|(keys[68])|(!shakingFinish))
+					{
+						if (shakingDeg)
+						{
+							if ((shakingDegX>-0.0001) & (shakingDegX<0.0001))
+							{
+								shakingFinish=true;
+							}else{
+								shakingFinish=false;
+							}
+							shakingDegX+=0.005;
+							shakingDegY=50*shakingDegX*shakingDegX;
+							if (shakingDegX>0.05)
+							{
+								shakingDeg=false;
+								shakingDegX=0.05;
+							}
+						}else
+						{
+							if ((shakingDegX>-0.00001) & (shakingDegX<0.00001))
+							{
+								shakingFinish=true;
+							}else{
+								shakingFinish=false;
+							}
+							shakingDegX-=0.005;
+							shakingDegY=50*shakingDegX*shakingDegX;
+							if (shakingDegX<-0.05)
+							{
+								shakingDeg=true;
+								shakingDegX=-0.05;
+							}
+						}
+					}
+				}else if(shakingFinish)
+				{
+					shakingDegX=0;
+					shakingDegY=0;
+				}
+			}
+			resetPlayerChunk();
+		}
+	}
+}
+
+void GobalListener()
+{
+	float lastTime = GetTickCount()*0.001f;;
 	while (!done)
 	{
 		mouse();
@@ -182,219 +468,6 @@ void keyboardListener()
 				if (!hasGetBlock)
 				{
 					player.ChooseBlockChunkID=-1;
-				}
-				if ((GetTickCount()-KeyBoardTick>13) & FirstLoafFinish)
-				{
-					MouseTimer++;
-					KeyBoardTick=GetTickCount();
-
-					float xMove;
-					float yMove;
-					float zMove;
-
-					//按键检测在此！
-					if (keys[49])//1
-					{
-						player.choiceNumber=0;
-					}
-					if (keys[50])//2
-					{
-						player.choiceNumber=1;
-					}
-					if (keys[51])//3
-					{
-						player.choiceNumber=2;
-					}
-					if (keys[52])//4
-					{
-						player.choiceNumber=3;
-					}
-					if (keys[53])//5
-					{
-						player.choiceNumber=4;
-					}
-					if (keys[54])//6
-					{
-						player.choiceNumber=5;
-					}
-					if (keys[55])//7
-					{
-						player.choiceNumber=6;
-					}
-					if (keys[56])//8
-					{
-						player.choiceNumber=7;
-					}
-					if (keys[57])//9
-					{
-						player.choiceNumber=8;
-					}
-
-					if (keys[87])//W
-					{
-						xMove=sin(player.around*(PI/180))*(player.speed);
-						zMove=-cos(player.around*(PI/180))*(player.speed);
-
-						player.x+=xMove;
-
-						if (isTouch())
-						{
-							player.x-=xMove;
-						}
-						player.z+=zMove;
-						if (isTouch())
-						{
-							player.z-=zMove;
-						}
-					}
-					if (keys[83])//S
-					{
-						xMove=-sin(player.around*(PI/180))*(player.speed);
-						zMove=cos(player.around*(PI/180))*(player.speed);
-
-						player.x+=xMove;
-
-						if (isTouch())
-						{
-							player.x-=xMove;
-						}
-						player.z+=zMove;
-						if (isTouch())
-						{
-							player.z-=zMove;
-						}
-					}
-					if (keys[65])//A
-					{
-						xMove=-cos(player.around*(PI/180))*(player.speed);
-						zMove=-sin(player.around*(PI/180))*(player.speed);
-
-						player.x+=xMove;
-
-						if (isTouch())
-						{
-							player.x-=xMove;
-						}
-						player.z+=zMove;
-						if (isTouch())
-						{
-							player.z-=zMove;
-						}
-					}
-					if (keys[68])//D
-					{
-						xMove=-cos((player.around+180)*(PI/180))*(player.speed);
-						zMove=-sin((player.around+180)*(PI/180))*(player.speed);
-
-						player.x+=xMove;
-
-						if (isTouch())
-						{
-							player.x-=xMove;
-						}
-						player.z+=zMove;
-						if (isTouch())
-						{
-							player.z-=zMove;
-						}
-					}
-					if (player.fly)
-					{
-						if (keys[16])//shift
-						{
-							yMove=-player.speed;
-							player.y+=yMove;
-							if (isTouch())
-							{
-								player.y-=yMove;
-
-							}
-						}
-						if (keys[32])//space
-						{
-							yMove=player.speed;
-							player.y+=yMove;
-							if (isTouch())
-							{
-								player.y-=yMove;
-							}
-						}
-					}else{
-						if ((keys[32]) & (!player.isJumping) & (player.onGround))//space
-						{
-							if ((!MC_Block[getBlockID(player.x+0.2,player.y+0.1,player.z+0.2)].isSoil) & (!MC_Block[getBlockID(player.x-0.2,player.y+0.1,player.z-0.2)].isSoil) & (!MC_Block[getBlockID(player.x+0.2,player.y+0.1,player.z-0.2)].isSoil) & (!MC_Block[getBlockID(player.x-0.2,player.y+0.1,player.z+0.2)].isSoil))
-							{
-								player.isJumping=true;
-								player.onGround=false;
-								player.jumpSpeed=0.1;
-							}
-						}
-						if (player.isJumping)
-						{
-							player.jumpSpeed-=0.006;
-							player.y+=player.jumpSpeed*1.6;
-							if ((MC_Block[getBlockID(player.x+0.2,player.y+0.1,player.z+0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y+0.1,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y+0.1,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y+0.1,player.z+0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y-1.6,player.z+0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y-1.6,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y-1.6,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y-1.6,player.z+0.2)].isSoil))
-							{
-								player.y-=player.jumpSpeed*1.6;
-								player.isJumping=false;
-							}
-						}else{
-							player.dropSpeed+=player.g*1.02;
-							player.y-=player.dropSpeed;
-							player.onGround=false;
-							if ((MC_Block[getBlockID(player.x-0.2,player.y-1.6,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x-0.2,player.y-1.6,player.z+0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y-1.6,player.z-0.2)].isSoil)|(MC_Block[getBlockID(player.x+0.2,player.y-1.6,player.z+0.2)].isSoil))
-							{
-								player.y+=player.dropSpeed;
-								player.dropSpeed=0;
-								player.onGround=true;
-							}
-						}
-					}
-					if ((shaking) & (!player.fly))
-					{
-						if((keys[87])|(keys[83])|(keys[65])|(keys[68])|(!shakingFinish))
-						{
-							if((keys[87])|(keys[83])|(keys[65])|(keys[68])|(!shakingFinish))
-							{
-								if (shakingDeg)
-								{
-									if ((shakingDegX>-0.0001) & (shakingDegX<0.0001))
-									{
-										shakingFinish=true;
-									}else{
-										shakingFinish=false;
-									}
-									shakingDegX+=0.005;
-									shakingDegY=50*shakingDegX*shakingDegX;
-									if (shakingDegX>0.05)
-									{
-										shakingDeg=false;
-										shakingDegX=0.05;
-									}
-								}else
-								{
-									if ((shakingDegX>-0.00001) & (shakingDegX<0.00001))
-									{
-										shakingFinish=true;
-									}else{
-										shakingFinish=false;
-									}
-									shakingDegX-=0.005;
-									shakingDegY=50*shakingDegX*shakingDegX;
-									if (shakingDegX<-0.05)
-									{
-										shakingDeg=true;
-										shakingDegX=-0.05;
-									}
-								}
-							}
-						}else if(shakingFinish)
-						{
-							shakingDegX=0;
-							shakingDegY=0;
-						}
-					}
-					resetPlayerChunk();
 				}
 			}
 		}

@@ -15,80 +15,197 @@ int GetTexture(int BlockID,int frount)
 
 int DrawMap(int ChunkListX,int ChunkListZ)
 {
-	if (player.ChooseBlockChunkID==-1)
+	if ((0<=ChunkListX) & (0<=ChunkListZ) & (15>ChunkListX) & (15>ChunkListZ))
 	{
-		player.BreakTime=0;
-	}
-	if (player.ChooseBlockChunkID==ChunkList[ChunkListX][ChunkListZ])
-	{
-		int ChooseBlockChunkID=player.ChooseBlockChunkID;
-		int ChooseBlockX=player.ChooseBlockX;
-		int ChooseBlockY=player.ChooseBlockY;
-		int ChooseBlockZ=player.ChooseBlockZ;
-		if (!(ChooseBlockChunkID==-1))
+		if (player.ChooseBlockChunkID==-1)
 		{
-			glEnable(GL_ALPHA_TEST);
-			int MoveChooseBlockX=(ChunkListX-7)*16+player.ChunkX*16;
-			int MoveChooseBlockZ=(ChunkListZ-7)*16+player.ChunkZ*16;
-			glLineWidth(2.0f);
-			glBegin(GL_LINES);
-			WriteDrawPointer(ChooseBlockX+MoveChooseBlockX,ChooseBlockY,ChooseBlockZ+MoveChooseBlockZ,0,-1,1,1,1,0);
-			glEnd();
-			if (MC_Block[Chunk[ChooseBlockChunkID].BlockID[ChooseBlockX][ChooseBlockY][ChooseBlockZ]].isSoil)
+			player.BreakTime=0;
+		}
+		if (player.ChooseBlockChunkID==ChunkList[ChunkListX][ChunkListZ])
+		{
+			int ChooseBlockChunkID=player.ChooseBlockChunkID;
+			int ChooseBlockX=player.ChooseBlockX;
+			int ChooseBlockY=player.ChooseBlockY;
+			int ChooseBlockZ=player.ChooseBlockZ;
+			if (!(ChooseBlockChunkID==-1))
 			{
-				if (player.BreakTime>0)
+				glEnable(GL_ALPHA_TEST);
+				int MoveChooseBlockX=(ChunkListX-7)*16+player.ChunkX*16;
+				int MoveChooseBlockZ=(ChunkListZ-7)*16+player.ChunkZ*16;
+				glLineWidth(2.0f);
+				glBegin(GL_LINES);
+				WriteDrawPointer(ChooseBlockX+MoveChooseBlockX,ChooseBlockY,ChooseBlockZ+MoveChooseBlockZ,0,-1,1,1,1,0);
+				glEnd();
+				if (MC_Block[Chunk[ChooseBlockChunkID].BlockID[ChooseBlockX][ChooseBlockY][ChooseBlockZ]].isSoil)
 				{
-					autoAddParticle(ChooseBlockX+MoveChooseBlockX,ChooseBlockY,ChooseBlockZ+MoveChooseBlockZ,1,Chunk[ChooseBlockChunkID].BlockID[ChooseBlockX][ChooseBlockY][ChooseBlockZ],player.ChooseBlockFrount);
-					BreakPrecent=player.BreakTime/player.BreakTimeNeed*9.5;
-					glBegin(GL_QUADS);
-					WriteDrawPointer(ChooseBlockX+MoveChooseBlockX,ChooseBlockY,ChooseBlockZ+MoveChooseBlockZ,0,-2,1,1,1,0);
-					glEnd();
+					if (player.BreakTime>0)
+					{
+						autoAddParticle(ChooseBlockX+MoveChooseBlockX,ChooseBlockY,ChooseBlockZ+MoveChooseBlockZ,1,Chunk[ChooseBlockChunkID].BlockID[ChooseBlockX][ChooseBlockY][ChooseBlockZ],player.ChooseBlockFrount);
+						BreakPrecent=player.BreakTime/player.BreakTimeNeed*9.5;
+						glBegin(GL_QUADS);
+						WriteDrawPointer(ChooseBlockX+MoveChooseBlockX,ChooseBlockY,ChooseBlockZ+MoveChooseBlockZ,0,-2,1,1,1,0);
+						glEnd();
+					}
 				}
 			}
 		}
-	}
-	if (!Chunk[ChunkList[ChunkListX][ChunkListZ]].isCreateList)
-	{
- 		if (!hasCreatList)
+		if (!Chunk[ChunkList[ChunkListX][ChunkListZ]].isCreateList)
 		{
-			if (!ChunkInfo[ChunkList[ChunkListX][ChunkListZ]].NeedBuild)
+			if ((!hasCreatList) | Chunk[ChunkList[ChunkListX][ChunkListZ]].mustCreateListNow)
 			{
-				hasCreatList=true;
-				Chunk[ChunkList[ChunkListX][ChunkListZ]].mustCreateListNow=false;
-				Chunk[ChunkList[ChunkListX][ChunkListZ]].isCreateList=true;
-				glNewList((ChunkList[ChunkListX][ChunkListZ]+1)*2,GL_COMPILE_AND_EXECUTE);
-				glEnable(GL_ALPHA_TEST);
-				glEnable(GL_BLEND);
-				glBegin(GL_QUADS);
-				int MoveX=(ChunkListX-7)*16+player.ChunkX*16;
-				int MoveZ=(ChunkListZ-7)*16+player.ChunkZ*16;
-				for (int cx=0;cx<16;cx++)
+				if (!ChunkInfo[ChunkList[ChunkListX][ChunkListZ]].NeedBuild)
 				{
-					for (int cz=0;cz<16;cz++)
+					hasCreatList=true;
+					Chunk[ChunkList[ChunkListX][ChunkListZ]].mustCreateListNow=false;
+					Chunk[ChunkList[ChunkListX][ChunkListZ]].isCreateList=true;
+					glNewList((ChunkList[ChunkListX][ChunkListZ]+1)*2,GL_COMPILE);
+					glEnable(GL_ALPHA_TEST);
+					glEnable(GL_BLEND);
+					glBegin(GL_QUADS);
+					int MoveX=(ChunkListX-7)*16+player.ChunkX*16;
+					int MoveZ=(ChunkListZ-7)*16+player.ChunkZ*16;
+					for (int cx=0;cx<16;cx++)
 					{
-						for (int cy=0;cy<256;cy++)
+						for (int cz=0;cz<16;cz++)
 						{
-							if ((!MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].halfHyaline) & (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].canSee))
+							for (int cy=0;cy<256;cy++)
 							{
-								if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isPlant)
+								if ((!MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].halfHyaline) & (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].canSee))
 								{
-									WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],0),1,1,1,1);
-								}else{
-									if (cy+1<256)
+									if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isPlant)
 									{
-										if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy+1][cz]].hyaline))
+										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],0),1,1,1,1);
+									}else{
+										if (cy+1<256)
 										{
-											if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isGrass) | (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf))
+											if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy+1][cz]].hyaline))
 											{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],0),0.6,1,0.4,0);
-											}else{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],0),1,1,1,0);
-											}						
+												if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isGrass) | (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf))
+												{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],0),0.6,1,0.4,0);
+												}else{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],0),1,1,1,0);
+												}						
+											}
 										}
-									}
-									if (cy-1>-1)
-									{
-										if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy-1][cz]].hyaline))
+										if (cy-1>-1)
+										{
+											if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy-1][cz]].hyaline))
+											{
+												if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
+												{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,1,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],1),0.6,1,0.4,0);
+												}else{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,1,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],1),1,1,1,0);
+												}
+											}
+										}
+										if (cx-1>-1)
+										{
+											if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx-1][cy][cz]].hyaline))
+											{
+												if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
+												{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),0.6,1,0.4,0);
+												}else{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),1,1,1,0);
+												}
+											}
+										}
+										if (cx+1<16)
+										{
+											if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx+1][cy][cz]].hyaline))
+											{
+												if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
+												{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),0.6,1,0.4,0);
+												}else{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),1,1,1,0);
+												}
+											}
+										}
+										if (cz+1<16)
+										{
+											if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz+1]].hyaline))
+											{
+												if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
+												{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),0.6,1,0.4,0);
+												}else{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),1,1,1,0);
+												}
+											}
+										}
+										if (cz-1>-1)
+										{
+											if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz-1]].hyaline))
+											{
+												if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
+												{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),0.6,1,0.4,0);
+												}else{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),1,1,1,0);
+												}
+											}
+										}
+										if (cx+1>15)
+										{
+											if (MC_Block[Chunk[ChunkList[ChunkListX+1][ChunkListZ]].BlockID[0][cy][cz]].hyaline)
+											{
+												if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
+												{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),0.6,1,0.4,0);
+												}else{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),1,1,1,0);
+												}
+											}
+										}
+										if (cx-1<0)
+										{
+											if (MC_Block[Chunk[ChunkList[ChunkListX-1][ChunkListZ]].BlockID[15][cy][cz]].hyaline)
+											{
+												if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
+												{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),0.6,1,0.4,0);
+												}else{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),1,1,1,0);
+												}
+											}
+										}
+										if (cz+1>15)
+										{
+											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ+1]].BlockID[cx][cy][0]].hyaline)
+											{
+												if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
+												{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),0.6,1,0.4,0);
+												}else{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),1,1,1,0);
+												}
+											}
+										}
+										if (cz-1<0)
+										{
+											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ-1]].BlockID[cx][cy][15]].hyaline)
+											{
+												if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
+												{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),0.6,1,0.4,0);
+												}else{
+													WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),1,1,1,0);
+												}
+											}
+										}
+										if (cy==255)
+										{
+											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
+											{
+												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][255][cz],0),0.6,1,0.4,0);
+											}else{
+												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][255][cz],0),1,1,1,0);
+											}
+										}
+										if (cy==0)
 										{
 											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
 											{
@@ -98,227 +215,113 @@ int DrawMap(int ChunkListX,int ChunkListZ)
 											}
 										}
 									}
+								}
+							}
+						}
+					}
+					glEnd();
+					glEndList();
+					glNewList((ChunkList[ChunkListX][ChunkListZ]+1)*2+1,GL_COMPILE);
+					glDepthMask(GL_FALSE);
+					glDisable(GL_ALPHA_TEST);
+					glBegin(GL_QUADS);
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					for (int cx=0;cx<16;cx++)
+					{
+						for (int cz=0;cz<16;cz++)
+						{
+							for (int cy=0;cy<256;cy++)
+							{
+								if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].halfHyaline) & (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].canSee))
+								{
+									if (cy+1<256)
+									{
+										if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy+1][cz]==0)
+										{
+											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],0),1,1,1,2);						
+										}
+									}
+									if (cy-1>-1)
+									{
+										if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy-1][cz]==0)
+										{
+											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,1,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],1),1,1,1,2);
+										}
+									}
 									if (cx-1>-1)
 									{
-										if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx-1][cy][cz]].hyaline))
+										if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx-1][cy][cz]==0)
 										{
-											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
-											{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),0.6,1,0.4,0);
-											}else{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),1,1,1,0);
-											}
+											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),1,1,1,2);
 										}
 									}
 									if (cx+1<16)
 									{
-										if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx+1][cy][cz]].hyaline))
+										if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx+1][cy][cz]==0)
 										{
-											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
-											{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),0.6,1,0.4,0);
-											}else{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),1,1,1,0);
-											}
+											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),1,1,1,2);
 										}
 									}
 									if (cz+1<16)
 									{
-										if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz+1]].hyaline))
+										if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz+1]==0)
 										{
-											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
-											{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),0.6,1,0.4,0);
-											}else{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),1,1,1,0);
-											}
+											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),1,1,1,2);
 										}
 									}
 									if (cz-1>-1)
 									{
-										if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz-1]].hyaline))
+										if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz-1]==0)
 										{
-											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
-											{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),0.6,1,0.4,0);
-											}else{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),1,1,1,0);
-											}
+											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),1,1,1,2);
 										}
 									}
 									if (cx+1>15)
 									{
-										if (MC_Block[Chunk[ChunkList[ChunkListX+1][ChunkListZ]].BlockID[0][cy][cz]].hyaline)
+										if (Chunk[ChunkList[ChunkListX+1][ChunkListZ]].BlockID[0][cy][cz]==0)
 										{
-											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
-											{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),0.6,1,0.4,0);
-											}else{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),1,1,1,0);
-											}
+											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),1,1,1,2);
 										}
 									}
 									if (cx-1<0)
 									{
-										if (MC_Block[Chunk[ChunkList[ChunkListX-1][ChunkListZ]].BlockID[15][cy][cz]].hyaline)
+										if (Chunk[ChunkList[ChunkListX-1][ChunkListZ]].BlockID[15][cy][cz]==0)
 										{
-											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
-											{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),0.6,1,0.4,0);
-											}else{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),1,1,1,0);
-											}
+											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),1,1,1,2);
 										}
 									}
 									if (cz+1>15)
 									{
-										if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ+1]].BlockID[cx][cy][0]].hyaline)
+										if (Chunk[ChunkList[ChunkListX][ChunkListZ+1]].BlockID[cx][cy][0]==0)
 										{
-											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
-											{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),0.6,1,0.4,0);
-											}else{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),1,1,1,0);
-											}
+											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),1,1,1,2);
 										}
 									}
 									if (cz-1<0)
 									{
-										if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ-1]].BlockID[cx][cy][15]].hyaline)
+										if (Chunk[ChunkList[ChunkListX][ChunkListZ-1]].BlockID[cx][cy][15]==0)
 										{
-											if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
-											{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),0.6,1,0.4,0);
-											}else{
-												WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),1,1,1,0);
-											}
+											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),1,1,1,2);
 										}
 									}
-									if (cy==255)
+									if (cy+1>255)
 									{
-										if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
-										{
-											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][255][cz],0),0.6,1,0.4,0);
-										}else{
-											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][255][cz],0),1,1,1,0);
-										}
+										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][255][cz],0),1,1,1,2);
 									}
-									if (cy==0)
-									{
-										if (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].isLeaf)
-										{
-											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,1,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],1),0.6,1,0.4,0);
-										}else{
-											WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,1,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],1),1,1,1,0);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				glEnd();
-				glEndList();
-				glNewList((ChunkList[ChunkListX][ChunkListZ]+1)*2+1,GL_COMPILE);
-				glDepthMask(GL_FALSE);
-				glDisable(GL_ALPHA_TEST);
-				glBegin(GL_QUADS);
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				for (int cx=0;cx<16;cx++)
-				{
-					for (int cz=0;cz<16;cz++)
-					{
-						for (int cy=0;cy<256;cy++)
-						{
-							if ((MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].halfHyaline) & (MC_Block[Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz]].canSee))
-							{
-								if (cy+1<256)
-								{
-									if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy+1][cz]==0)
-									{
-										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],0),1,1,1,2);						
-									}
-								}
-								if (cy-1>-1)
-								{
-									if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy-1][cz]==0)
+									if (cy-1<0)
 									{
 										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,1,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],1),1,1,1,2);
 									}
 								}
-								if (cx-1>-1)
-								{
-									if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx-1][cy][cz]==0)
-									{
-										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),1,1,1,2);
-									}
-								}
-								if (cx+1<16)
-								{
-									if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx+1][cy][cz]==0)
-									{
-										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),1,1,1,2);
-									}
-								}
-								if (cz+1<16)
-								{
-									if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz+1]==0)
-									{
-										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),1,1,1,2);
-									}
-								}
-								if (cz-1>-1)
-								{
-									if (Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz-1]==0)
-									{
-										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),1,1,1,2);
-									}
-								}
-								if (cx+1>15)
-								{
-									if (Chunk[ChunkList[ChunkListX+1][ChunkListZ]].BlockID[0][cy][cz]==0)
-									{
-										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,3,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],3),1,1,1,2);
-									}
-								}
-								if (cx-1<0)
-								{
-									if (Chunk[ChunkList[ChunkListX-1][ChunkListZ]].BlockID[15][cy][cz]==0)
-									{
-										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,2,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],2),1,1,1,2);
-									}
-								}
-								if (cz+1>15)
-								{
-									if (Chunk[ChunkList[ChunkListX][ChunkListZ+1]].BlockID[cx][cy][0]==0)
-									{
-										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,4,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],4),1,1,1,2);
-									}
-								}
-								if (cz-1<0)
-								{
-									if (Chunk[ChunkList[ChunkListX][ChunkListZ-1]].BlockID[cx][cy][15]==0)
-									{
-										WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,5,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],5),1,1,1,2);
-									}
-								}
-								if (cy+1>255)
-								{
-									WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,0,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][255][cz],0),1,1,1,2);
-								}
-								if (cy-1<0)
-								{
-									WriteDrawPointer(cx+MoveX,cy,cz+MoveZ,1,GetTexture(Chunk[ChunkList[ChunkListX][ChunkListZ]].BlockID[cx][cy][cz],1),1,1,1,2);
-								}
 							}
 						}
 					}
+					glEnd();
+					glDepthMask(GL_TRUE);
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					glEndList();
+					glDisable(GL_BLEND);
 				}
-				glEnd();
-				glDepthMask(GL_TRUE);
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				glEndList();
-				glDisable(GL_BLEND);
 			}
 		}
 	}
@@ -341,7 +344,7 @@ int WriteDrawPointer(int x,int y,int z,int frount,int TextureID,float ColorR,flo
 		{
 			if (frount==0)
 			{
-			
+
 				glColor3f(1.0f-ColorR,1.0f-ColorG,1.0f-ColorB);				// 设置当前色为黑
 				//右前点
 				glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
@@ -440,7 +443,7 @@ int WriteDrawPointer(int x,int y,int z,int frount,int TextureID,float ColorR,flo
 
 			}
 		}else if(Mode==1){
-		//右前点
+			//右前点
 			glColor3f(1.0f-ColorR,1.0f-ColorG,1.0f-ColorB);				// 设置当前色为黑
 			glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
 			glVertex3f(x+1,y+1,z);
@@ -469,7 +472,7 @@ int WriteDrawPointer(int x,int y,int z,int frount,int TextureID,float ColorR,flo
 
 			if (frount==0)
 			{
-			
+
 				glColor4f(1.0f-ColorR,1.0f-ColorG,1.0f-ColorB,1.0f);				// 设置当前色为黑
 				//右前点
 				glTexCoord2f(TextureX/16.0,(16.0-TextureZ)/16);
