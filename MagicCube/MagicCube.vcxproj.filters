@@ -110,5 +110,8 @@
     <ClCompile Include="Inventory.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="__Fix.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

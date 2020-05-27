@@ -5,9 +5,12 @@ int MagicCubeInit();
 
 int InitGL(GLvoid)								// 此处开始对OpenGL进行所有设置
 {
+	auto result = glewInit();
+	if (glewGetExtension("GL_ARB_window_pos"))
+		__glewWindowPos2iARB = (PFNGLWINDOWPOS2IARBPROC)wglGetProcAddress("glWindowPos2iARB");
+
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_EQUAL,1.0f);
-	glewInit();
 	glEnable(GL_TEXTURE_2D);						// 启用纹理映射
 	glShadeModel(GL_SMOOTH);						// 启用阴影平滑
 	glClearColor(0.3f, 0.6f, 1.0f, 0.0f);					// 蓝色背景
@@ -17,7 +20,7 @@ int InitGL(GLvoid)								// 此处开始对OpenGL进行所有设置
 	glDepthFunc(GL_LEQUAL);							// 所作深度测试的类型
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);			// 告诉系统对透视进行修正(影响性能！)
 	glClear(GL_DEPTH_BUFFER_BIT);
-	glewInit();
+
 	if (MagicCubeInit()==false)
 	{
 		return FALSE;								// 初始化 失败

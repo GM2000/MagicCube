@@ -1,6 +1,7 @@
 #define _WIN32_WINNT 0x0502
+#define GLEW_STATIC
 #include <afxwin.h>		// Windows的头文件
-#include "glew.h"		// 包含最新的gl.h,glu.h库
+#include "gl\glew.h"		// 包含最新的gl.h,glu.h库
 #include "gl\glut.h"		// 包含OpenGL实用库
 #include <math.h>
 

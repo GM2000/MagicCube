@@ -17,7 +17,7 @@ CString WorldName;
 
 #pragma comment(lib, "gltools.lib") 
 
-#pragma comment(lib, "glew32.lib") 
+#pragma comment(lib, "glew32s.lib") 
 
 int DrawMap(int ChunkID);
 int AddMCTexture();
@@ -82,9 +82,9 @@ int InitGame(char *WorldLoadName)
 	{
 		srand((unsigned)time( NULL )); 
 		seed=rand();
-		player.x=1000;
+		player.x=100;
 		player.y=100;
-		player.z=1000;
+		player.z=100;
 		writeBasicDate();
 	}else{
 		readBasicDate();
